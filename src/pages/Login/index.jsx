@@ -1,7 +1,7 @@
 import React from 'react'
 import { AnimationContainer, Background, Container, Content } from './styles'
 import Button from "../../components/Button"
-import { Link } from 'react-router-dom'
+import { Link,Redirect } from 'react-router-dom'
 import Input from '../../components/Input'
 import {FiMail,FiLock} from "react-icons/fi"
 import { useForm } from 'react-hook-form'
@@ -9,8 +9,9 @@ import * as yup from "yup"
 import {yupResolver} from "@hookform/resolvers/yup"
 import api from "../../services/api"
 import toast from 'react-hot-toast'
+import {useHistory} from "react-router-dom"
 
-export default function SignUp() {
+export default function Login({authenticated,setAuthenticated}) {
     const schema = yup.object().shape({
         email: yup.string().required("Campo obrigatório"),
         password: yup.string().required("Campo obrigatório"),
@@ -24,17 +25,24 @@ export default function SignUp() {
         resolver:yupResolver(schema)
     })
 
-    const onSubmitFunction = ({email,password}) =>{
-        const user = {
-            email:email,
-            password:password
-        }
-        api.post("/user/login",user)
-        .then((res)=>toast.success(`Bem vindo de volta ${res.data.user.name}`))
+    const history = useHistory()
+
+    const onSubmitFunction = data =>{
+        api.post("/user/login",data)
+        .then((res)=>{
+            const{token} = res.data
+            localStorage.setItem("@Doit:token",JSON.stringify(token))
+            setAuthenticated(true)
+            history.push("/dashboard")
+        })
         .catch((err)=>{
-            toast.error("Erro ao criar a conta")
+            toast.error("E-mail ou Senha inválidos")
             console.log(err)
         })
+    }
+
+    if(authenticated){
+        return <Redirect to="/dashboard"/>
     }
 
     return (

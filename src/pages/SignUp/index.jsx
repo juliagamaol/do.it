@@ -1,7 +1,7 @@
 import React from 'react'
 import { AnimationContainer, Background, Container, Content } from './styles'
 import Button from "../../components/Button"
-import { Link } from 'react-router-dom'
+import { Link,Redirect } from 'react-router-dom'
 import Input from '../../components/Input'
 import {FiUser,FiMail,FiLock} from "react-icons/fi"
 import { useForm } from 'react-hook-form'
@@ -11,7 +11,7 @@ import api from "../../services/api"
 import toast from 'react-hot-toast'
 import {useHistory} from "react-router-dom"
 
-export default function SignUp() {
+export default function SignUp({authenticated}) {
     const schema = yup.object().shape({
         name: yup.string().required("Campo obrigatório"),
         email: yup.string().required("Campo obrigatório"),
@@ -47,6 +47,10 @@ export default function SignUp() {
             toast.error("Erro ao criar a conta")
             console.log(err)
         })
+    }
+
+    if(authenticated){
+        return <Redirect to="/dashboard"/>
     }
 
     return (
