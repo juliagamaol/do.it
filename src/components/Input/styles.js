@@ -5,7 +5,6 @@ export const Container = styled.div`
    span{
     color:var(--red);
    }
-
 `
 export const InputContainer = styled.div`
     background: var(--white);

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, InputContainer } from './styles'
 
-export default function Input({label,icon:Icon, name,error,register,...rest}) {
+export default function Input({label,icon:Icon, name,error="",register,...rest}) {
     return (
         <Container>
             <div>{label}{!!error && <span> - {error}</span>}</div>
